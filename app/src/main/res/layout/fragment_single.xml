@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/custom_toolbar" android:tag="customToolbar" android:id="@+id/toolbarSingle"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:tag="customContent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:scaleType="centerCrop"
+                    android:minHeight="200dp"
+                    android:src="@drawable/account"
+                    android:id="@+id/artist_big_cover" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New Text"
+                    android:id="@+id/single_genres"
+                    android:textColor="@color/colorSummaryText"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_below="@+id/artist_big_cover"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/biography"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:id="@+id/biography_label"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:layout_below="@+id/single_summary"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/biography"
+                    android:id="@+id/single_description"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:textColor="@android:color/black"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_below="@+id/biography_label"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/single_summary"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_below="@+id/single_genres">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="New Text"
+                        android:id="@+id/single_tracks"
+                        android:textColor="@color/colorSummaryText"
+                        android:layout_marginRight="10dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
+
+                    <TextView
+                        android:background="@drawable/divider_dot"
+                        android:id="@+id/textView2"
+                        android:layout_height="4dp"
+                        android:layout_width="4dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/single_tracks"
+                        android:layout_toEndOf="@+id/single_tracks" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="New Text"
+                        android:id="@+id/single_songs"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/colorSummaryText"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/textView2"
+                        android:layout_toEndOf="@+id/textView2" />
+                </RelativeLayout>
+            </RelativeLayout>
+        </ScrollView>
+
+    </RelativeLayout>
+</LinearLayout>

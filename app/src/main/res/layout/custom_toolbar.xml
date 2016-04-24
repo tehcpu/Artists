@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toolbar_actionbar"
+    android:tag="customToolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?android:actionBarSize"
+    android:orientation="horizontal">
+
+    <ImageButton
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:src="@drawable/ic_arrow_back"
+        android:tint="@android:color/white"
+        android:layout_gravity="left|center_vertical"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/imageButton"
+        android:tag="toolbarBack"
+        android:visibility="gone"
+        android:background="@drawable/custom_ripple"
+        tools:ignore="RtlHardcoded" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:tag="toolbarTitle"
+        android:id="@+id/textView"
+        android:textSize="20sp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:textColor="@android:color/white"
+        android:layout_gravity="left|center_vertical"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/imageButton"
+        android:layout_toEndOf="@+id/imageButton" />
+</RelativeLayout>
