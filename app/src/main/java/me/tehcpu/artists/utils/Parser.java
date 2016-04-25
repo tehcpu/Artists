@@ -1,7 +1,5 @@
 package me.tehcpu.artists.utils;
 
-import android.util.Log;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -87,7 +85,6 @@ public class Parser {
 
     public interface onDataParsed {
         void success(ArrayList<Artist> data);
-        void failed(JSONObject response);
     }
 
     public static Parser getInstance() {

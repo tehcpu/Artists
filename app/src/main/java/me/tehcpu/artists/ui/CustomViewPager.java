@@ -2,12 +2,8 @@ package me.tehcpu.artists.ui;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
-
-import me.tehcpu.artists.RootActivity;
 
 /**
  * Created by codebreak on 19/04/16.

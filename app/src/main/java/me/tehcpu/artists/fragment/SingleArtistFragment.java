@@ -1,6 +1,5 @@
 package me.tehcpu.artists.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,8 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-
-import java.io.Serializable;
 
 import me.tehcpu.artists.R;
 import me.tehcpu.artists.RootActivity;

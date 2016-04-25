@@ -1,18 +1,13 @@
 package me.tehcpu.artists.ui;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import me.tehcpu.artists.R;
-import me.tehcpu.artists.fragment.MainFragment;
 
 /**
  * Created by codebreak on 22/04/16.

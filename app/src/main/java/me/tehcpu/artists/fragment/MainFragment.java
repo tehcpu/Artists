@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import me.tehcpu.artists.R;
 import me.tehcpu.artists.RootActivity;
 import me.tehcpu.artists.adapter.ArtistsAdapter;
 import me.tehcpu.artists.model.Artist;
-import me.tehcpu.artists.model.ArtistCover;
 import me.tehcpu.artists.ui.CustomToolbar;
 import me.tehcpu.artists.ui.DividerItemDecoration;
 import me.tehcpu.artists.ui.RecyclerItemClickListener;
@@ -35,9 +33,6 @@ import me.tehcpu.artists.utils.Parser;
 public class MainFragment extends Fragment {
 
     private static MainFragment instance;
-    private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutManager;
-    private ArtistsAdapter mAdapter;
     private String TAG = "MainFragment";
 
     @Override
@@ -55,8 +50,6 @@ public class MainFragment extends Fragment {
         toolbar.setTitle(getContext().getString(R.string.artists));
 
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-
-        final ArrayList<Artist> data = new ArrayList<>();
 
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.artists_view);
         rv.setHasFixedSize(true);
@@ -95,11 +88,6 @@ public class MainFragment extends Fragment {
                                 adapter.addAll(data);
                             }
                         });
-                    }
-
-                    @Override
-                    public void failed(JSONObject response) {
-                        //
                     }
                 });
                 return null;

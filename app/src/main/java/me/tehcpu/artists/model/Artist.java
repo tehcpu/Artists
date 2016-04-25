@@ -1,7 +1,5 @@
 package me.tehcpu.artists.model;
 
-import android.os.Parcelable;
-
 import java.io.Serializable;
 
 import me.tehcpu.artists.utils.Common;
@@ -107,6 +105,3 @@ public class Artist implements Serializable {
         return Common.formSummary(getTracks(), "песня", "песни", "песен");
     }
 }
-
-//int i = 3;
-//Console.WriteLine(i.Decline("Прошёл", "Прошло", "Прошло") + " " + i.ToString() + " " + i.Decline("час", "часа", "часов"));

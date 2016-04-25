@@ -1,7 +1,6 @@
 package me.tehcpu.artists.ui;
 
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,15 +44,15 @@ public class CustomPagerTransformer implements ViewPager.PageTransformer {
         } else if (position <= 1) { // (0,1]
 
             // init section
-            view.setTranslationX((float) (pageWidth * -position));
+            view.setTranslationX(pageWidth * -position);
             RelativeLayout content = (RelativeLayout) view.findViewWithTag("customContent");
             RelativeLayout toolbar = (RelativeLayout) view.findViewWithTag("customToolbar");
 
             toolbar.setAlpha((float) (1 - position*1.2));
-            content.setTranslationX((float) (pageWidth * position));
+            content.setTranslationX(pageWidth * position);
 
-            content.setTranslationX((float) (pageWidth * position));
-            toolbar.setTranslationX((float) (pageWidth * position/4));
+            content.setTranslationX(pageWidth * position);
+            toolbar.setTranslationX(pageWidth * position/4);
         } else { // (1,+Infinity]
             view.setAlpha(0);
         }
