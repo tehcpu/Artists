@@ -31,9 +31,10 @@ import me.tehcpu.artists.utils.Parser;
  * Created by codebreak on 19/04/16.
  */
 public class MainFragment extends Fragment {
-
-    private static MainFragment instance;
+    private static volatile MainFragment Instance;
     private String TAG = "MainFragment";
+    private ArtistsAdapter adapter;
+    private View progressBar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,13 +50,34 @@ public class MainFragment extends Fragment {
 
         toolbar.setTitle(getContext().getString(R.string.artists));
 
-        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.artists_view);
         rv.setHasFixedSize(true);
-        final ArtistsAdapter adapter = new ArtistsAdapter();
+        adapter = new ArtistsAdapter();
         rv.setAdapter(adapter);
 
+        rv.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        RootActivity.getInstance().startSingleArtist(adapter.getItem(position));
+                    }
+                })
+        );
+
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        rv.setLayoutManager(llm);
+
+        rv.addItemDecoration(new DividerItemDecoration(view.getContext()));
+
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -93,28 +115,19 @@ public class MainFragment extends Fragment {
                 return null;
             }
         }.execute();
-
-        rv.addOnItemTouchListener(
-                new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        RootActivity.getInstance().startSingleArtist(adapter.getItem(position));
-                    }
-                })
-        );
-
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        rv.setLayoutManager(llm);
-
-        rv.addItemDecoration(new DividerItemDecoration(view.getContext()));
-
-
-        return view;
     }
 
     public static MainFragment getInstance() {
-        if (instance == null) instance = new MainFragment();
-        return instance;
+        MainFragment localInstance = Instance;
+        if (localInstance == null) {
+            synchronized (MainFragment.class) {
+                localInstance = Instance;
+                if (localInstance == null) {
+                    Instance = localInstance = new MainFragment();
+                }
+            }
+        }
+        return localInstance;
     }
 
 }

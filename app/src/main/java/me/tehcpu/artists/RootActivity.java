@@ -19,8 +19,7 @@ import me.tehcpu.artists.ui.CustomViewPager;
 
 public class RootActivity extends AppCompatActivity {
 
-
-    private static RootActivity instance;
+    private static volatile RootActivity Instance;
     private FragmentManager fragmentManager;
     private CustomPagerAdapter pagerAdapter;
     private CustomViewPager viewPager;
@@ -58,12 +57,15 @@ public class RootActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
 
             @Override
             public void onPageSelected(final int position) {
                 Log.d(TAG, "position --> "+position);
                 if (position == 0) {
+                    pagerAdapter.removeFragment(pagerAdapter.getCount()-1);
+                    pagerAdapter.notifyDataSetChanged();
                     CustomViewPager.setCondition(true);
                 } else {
                     CustomViewPager.setCondition(false);
@@ -77,22 +79,22 @@ public class RootActivity extends AppCompatActivity {
         });
 
         if (savedInstanceState != null) {
-            Log.d(TAG, savedInstanceState.getInt("item")+" <-- " + "pagerC --> "+ pagerAdapter.getCount());
             if (savedInstanceState.getInt("item") > 0) {
-                pagerAdapter.addFragment(SingleArtistFragment.getInstance());
-                pagerAdapter.notifyDataSetChanged();
+                if (!SingleArtistFragment.getInstance().isAdded()) {
+                    pagerAdapter.addFragment(SingleArtistFragment.getInstance());
+                    pagerAdapter.notifyDataSetChanged();
+                }
                 viewPager.setCurrentItem(savedInstanceState.getInt("item"));
             }
         }
 
-        instance = this;
+        Instance = this;
 
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(TAG, "onSaveInstanceState, curI -->"+ viewPager.getCurrentItem());
         outState.putInt("item", viewPager.getCurrentItem());
     }
 
@@ -117,19 +119,18 @@ public class RootActivity extends AppCompatActivity {
             fragmentChild.getArguments().putAll(bundle);
         }
 
-        if (pagerAdapter.getCount() < 2)pagerAdapter.addFragment(fragmentChild);
+        //
+        pagerAdapter.addFragment(fragmentChild);
         pagerAdapter.notifyDataSetChanged();
-        viewPager.setCurrentItem(pagerAdapter.getCount(), true);
+
+        fragmentChild.reloadArtist(artist);
+
+        viewPager.setCurrentItem(viewPager.getChildCount(), true);
         CustomViewPager.setCondition(false);
     }
 
     public void finishSingleArtist() {
         viewPager.setCurrentItem(0, true);
-    }
-
-    public static RootActivity getInstance() {
-        if (instance == null) instance = new RootActivity(); // not real, but just in case
-        return instance;
     }
 
     // helper stuff (fake title)
@@ -155,6 +156,19 @@ public class RootActivity extends AppCompatActivity {
         } else {
             finish();
         }
+    }
+
+    public static RootActivity getInstance() {
+        RootActivity localInstance = Instance;
+        if (localInstance == null) {
+            synchronized (RootActivity.class) {
+                localInstance = Instance;
+                if (localInstance == null) {
+                    Instance = localInstance = new RootActivity();
+                }
+            }
+        }
+        return localInstance;
     }
 
 }

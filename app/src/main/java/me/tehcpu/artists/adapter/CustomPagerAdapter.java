@@ -9,18 +9,20 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import me.tehcpu.artists.RootActivity;
+
 /**
  * Created by codebreak on 19/04/16.
  */
 public class CustomPagerAdapter extends FragmentPagerAdapter {
-    private static CustomPagerAdapter instance;
+    private static volatile CustomPagerAdapter Instance;
     private final ArrayList<Fragment> mFragmentList = new ArrayList<>();
     private final FragmentManager manager;
 
     public CustomPagerAdapter(FragmentManager manager, Context context) {
         super(manager);
         this.manager = manager;
-        this.instance = this;
+        this.Instance = this;
     }
 
     public void addFragment(Fragment fragment) {
@@ -42,15 +44,6 @@ public class CustomPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public Fragment instantiateItem(ViewGroup container, int position){
-        Fragment fragment = getItem(position);
-        FragmentTransaction trans = manager.beginTransaction();
-        trans.add(container.getId(),fragment,"fragment:"+position);
-        trans.commit();
-        return fragment;
-    }
-
-    @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         if (position >= getCount()) {
             FragmentManager manager = ((Fragment) object).getFragmentManager();
@@ -61,6 +54,16 @@ public class CustomPagerAdapter extends FragmentPagerAdapter {
     }
 
     public static CustomPagerAdapter getInstance() {
-        return instance;
+        CustomPagerAdapter localInstance = Instance;
+        if (localInstance == null) {
+            synchronized (CustomPagerAdapter.class) {
+                localInstance = Instance;
+                if (localInstance == null) {
+                    RootActivity rootInstance = RootActivity.getInstance();
+                    Instance = localInstance = new CustomPagerAdapter(rootInstance.getSupportFragmentManager(), rootInstance.getApplicationContext());
+                }
+            }
+        }
+        return localInstance;
     }
 }

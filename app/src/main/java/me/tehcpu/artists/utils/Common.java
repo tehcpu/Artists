@@ -6,9 +6,6 @@ import java.io.UnsupportedEncodingException;
  * Created by codebreak on 23/04/16.
  */
 public class Common {
-    private static String TAG="Common";
-    private static Common instance;
-
     public static String formSummary(long num, String nominative, String singular, String plural) {
         if (num > 10 && ((num % 100) / 10) == 1) return plural;
         switch ((int) (num % 10)) {
@@ -32,10 +29,5 @@ public class Common {
             return null;
         }
         return str;
-    }
-
-    public static Common getInstance() {
-        if (instance == null) instance = new Common();
-        return instance;
     }
 }

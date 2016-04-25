@@ -18,7 +18,7 @@ import me.tehcpu.artists.model.ArtistCover;
  * Created by codebreak on 24/04/16.
  */
 public class Parser {
-    private static Parser instance;
+    private static volatile Parser Instance = null;
     private int cache = 0;
 
     public void getData(final onDataParsed callback) {
@@ -63,11 +63,22 @@ public class Parser {
                 JSONObject item = data.getJSONObject(i);
                 artist.setId(item.getLong("id"));
                 artist.setName(Common.fixEncoding(item.getString("name")));
-                // disgustingly solution, but work :D
-                artist.setGenres(item.getJSONArray("genres").toString().replace("[", "").replace("]", "").replace("\"", "").replace(",", ", "));
+
+                StringBuilder genresBuilder = new StringBuilder();
+                JSONArray genres = item.getJSONArray("genres");
+                boolean started = false;
+                for (int j = 0; j <  genres.length(); j++) {
+                    if (started)
+                        genresBuilder.append(", ");
+                    genresBuilder.append(genres.getString(j));
+                    started = true;
+                }
+
+                artist.setGenres(genresBuilder.toString());
+
                 artist.setTracks(item.getLong("tracks"));
                 artist.setAlbums(item.getLong("albums"));
-                artist.setLink(item.getString("link"));
+                if (item.has("link")) artist.setLink(item.getString("link"));
                 artist.setDescription(Common.fixEncoding(item.getString("description")));
 
                 JSONObject cover = item.getJSONObject("cover");
@@ -88,7 +99,15 @@ public class Parser {
     }
 
     public static Parser getInstance() {
-        if (instance == null) instance = new Parser();
-        return instance;
+        Parser localInstance = Instance;
+        if (localInstance == null) {
+            synchronized (Parser.class) {
+                localInstance = Instance;
+                if (localInstance == null) {
+                    Instance = localInstance = new Parser();
+                }
+            }
+        }
+        return localInstance;
     }
 }

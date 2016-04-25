@@ -23,7 +23,8 @@ import me.tehcpu.artists.ui.CustomToolbar;
  * Created by codebreak on 19/04/16.
  */
 public class SingleArtistFragment extends Fragment {
-    private static SingleArtistFragment instance;
+
+    private static volatile SingleArtistFragment Instance;
     private String TAG = "SingleArtistFragment";
     private ImageView cover_big;
     private TextView genres;
@@ -69,7 +70,7 @@ public class SingleArtistFragment extends Fragment {
             }
         });
 
-        instance = this;
+        Instance = this;
 
         //
         Picasso.with(RootActivity.getInstance().getApplicationContext()).load(artist.getCover().getBig()).placeholder(R.drawable.account).into(cover_big);
@@ -82,18 +83,8 @@ public class SingleArtistFragment extends Fragment {
         return view;
     }
 
-    public static SingleArtistFragment getInstance() {
-        if (instance == null) instance = new SingleArtistFragment();
-        return instance;
-    }
-
-    @Override
-    public void setMenuVisibility(final boolean visible) {
-        super.setMenuVisibility(visible);
-        if (visible) {
+    public void reloadArtist(Artist artist) {
             View view = getView();
-            Bundle bundle = getArguments();
-            Artist artist = (Artist) bundle.getSerializable("artist");
             if (view != null) {
                 toolbar.setTitle(artist.getName());
                 Picasso.with(RootActivity.getInstance().getApplicationContext()).load(artist.getCover().getBig()).placeholder(R.drawable.account).into(cover_big);
@@ -102,6 +93,18 @@ public class SingleArtistFragment extends Fragment {
                 songs.setText(artist.getTracks()+" "+artist.getTracksHuman());
                 description.setText(artist.getDescription().substring(0,1).toUpperCase() + artist.getDescription().substring(1));
             }
+    }
+
+    public static SingleArtistFragment getInstance() {
+        SingleArtistFragment localInstance = Instance;
+        if (localInstance == null) {
+            synchronized (SingleArtistFragment.class) {
+                localInstance = Instance;
+                if (localInstance == null) {
+                    Instance = localInstance = new SingleArtistFragment();
+                }
+            }
         }
+        return localInstance;
     }
 }

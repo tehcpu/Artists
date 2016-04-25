@@ -12,16 +12,12 @@ import com.android.volley.toolbox.Volley;
  */
 public class ArtistsApplication extends Application {
 
-    private static ArtistsApplication instance;
+    private static ArtistsApplication Instance;
     private RequestQueue mainRequestQueue;
 
     public ArtistsApplication(){
         super();
-        instance = this;
-    }
-
-    public static ArtistsApplication getInstance() {
-        return instance;
+        Instance = this;
     }
 
     @Override
@@ -50,5 +46,18 @@ public class ArtistsApplication extends Application {
         if (mainRequestQueue != null) {
             mainRequestQueue.cancelAll("Main");
         }
+    }
+
+    public static ArtistsApplication getInstance() {
+        ArtistsApplication localInstance = Instance;
+        if (localInstance == null) {
+            synchronized (ArtistsApplication.class) {
+                localInstance = Instance;
+                if (localInstance == null) {
+                    Instance = localInstance = new ArtistsApplication();
+                }
+            }
+        }
+        return localInstance;
     }
 }
