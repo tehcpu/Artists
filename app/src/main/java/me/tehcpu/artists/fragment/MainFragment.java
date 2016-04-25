@@ -1,5 +1,6 @@
 package me.tehcpu.artists.fragment;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,14 +10,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import me.tehcpu.artists.ArtistsApplication;
 import me.tehcpu.artists.R;
 import me.tehcpu.artists.RootActivity;
 import me.tehcpu.artists.adapter.ArtistsAdapter;
@@ -25,9 +27,7 @@ import me.tehcpu.artists.model.ArtistCover;
 import me.tehcpu.artists.ui.CustomToolbar;
 import me.tehcpu.artists.ui.DividerItemDecoration;
 import me.tehcpu.artists.ui.RecyclerItemClickListener;
-import me.tehcpu.artists.utils.Cache;
 import me.tehcpu.artists.utils.Parser;
-import me.tehcpu.artists.utils.Provider;
 
 /**
  * Created by codebreak on 19/04/16.
@@ -53,30 +53,58 @@ public class MainFragment extends Fragment {
         CustomToolbar toolbar = new CustomToolbar(view.getContext(), toolbarLayout);
 
         toolbar.setTitle(getContext().getString(R.string.artists));
-        Bundle bundle = getArguments();
-//        childname = bundle.getString("data");
+
+        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         final ArrayList<Artist> data = new ArrayList<>();
-
-        Artist art = new Artist(1080505, "Tove Lo", "pop, dance, electronics", 81, 22, "http://www.tove-lo.com/", "шведская певица и автор песен. Она привлекла к себе внимание в 2013 году с выпуском сингла «Habits», но настоящего успеха добилась с ремиксом хип-хоп продюсера Hippie Sabotage на эту песню, который получил название «Stay High». 4 марта 2014 года вышел её дебютный мини-альбом Truth Serum, а 24 сентября этого же года дебютный студийный альбом Queen of the Clouds. Туве Лу является автором песен таких артистов, как Icona Pop, Girls Aloud и Шер Ллойд.", new ArtistCover("http://avatars.yandex.net/get-music-content/dfc531f5.p.1080505/300x300", "http://avatars.yandex.net/get-music-content/dfc531f5.p.1080505/1000x1000"));
 
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.artists_view);
         rv.setHasFixedSize(true);
         final ArtistsAdapter adapter = new ArtistsAdapter();
         rv.setAdapter(adapter);
 
-        Parser.getInstance().getData(new Parser.onDataParsed() {
+        new AsyncTask<Void, Void, Void>() {
             @Override
-            public void success(ArrayList<Artist> data) {
-                Log.d(TAG, data.size()+"asdasd");
-                adapter.addAll(data);
-            }
+            protected Void doInBackground(Void... params) {
+                Parser.getInstance().getData(new Parser.onDataParsed() {
+                    @Override
+                    public void success(final ArrayList<Artist> data) {
+                        RootActivity.getInstance().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                AlphaAnimation animation = new AlphaAnimation(1f, 0f);
+                                animation.setDuration(300);
+                                animation.setFillAfter(true);
+                                animation.setAnimationListener(new Animation.AnimationListener() {
+                                    @Override
+                                    public void onAnimationStart(Animation animation) {
 
-            @Override
-            public void failed(JSONObject response) {
-                Log.d(TAG, data.size()+"asdasd");
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animation animation) {
+                                        progressBar.setVisibility(View.GONE);
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animation animation) {
+
+                                    }
+                                });
+                                progressBar.startAnimation(animation);
+                                adapter.addAll(data);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void failed(JSONObject response) {
+                        //
+                    }
+                });
+                return null;
             }
-        });
+        }.execute();
 
         rv.addOnItemTouchListener(
                 new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {

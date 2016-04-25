@@ -69,8 +69,7 @@ public class RootActivity extends AppCompatActivity {
             public void onPageSelected(final int position) {
                 Log.d(TAG, "position --> "+position);
                 if (position == 0) {
-                            pagerAdapter.removeFragment(1);
-                            pagerAdapter.notifyDataSetChanged();
+                    CustomViewPager.setCondition(true);
                 } else {
                     CustomViewPager.setCondition(false);
                 }
@@ -105,18 +104,27 @@ public class RootActivity extends AppCompatActivity {
     // Fragments
 
     public void startSingleArtist(Artist artist) {
-        Log.d(TAG, "kqweqweqwe");
+        // Just in case..
+        if (pagerAdapter.getCount() > 1) {
+            pagerAdapter.removeFragment(1);
+        }
+
+        // init fragment
+        SingleArtistFragment fragmentChild = SingleArtistFragment.getInstance();
+
+        // and passing Artist object
         Bundle bundle = new Bundle();
         bundle.putSerializable("artist", artist);
-        SingleArtistFragment fragmentChild = new SingleArtistFragment();
-        fragmentChild.setArguments(bundle);
-        pagerAdapter.addFragment(fragmentChild);
+
+        if (fragmentChild.getArguments() == null) {
+            fragmentChild.setArguments(bundle);
+        } else {
+            fragmentChild.getArguments().putAll(bundle);
+        }
+
+        if (pagerAdapter.getCount() < 2)pagerAdapter.addFragment(fragmentChild);
         pagerAdapter.notifyDataSetChanged();
-
-        viewPager.setCurrentItem(pagerAdapter.getCount()+1, true);
-
-        fragmentChild.updateScreen(artist);
-
+        viewPager.setCurrentItem(pagerAdapter.getCount(), true);
         CustomViewPager.setCondition(false);
     }
 
